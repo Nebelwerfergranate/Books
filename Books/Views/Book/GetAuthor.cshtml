@@ -1,0 +1,187 @@
+﻿@using Books.Models.Entities
+@model Books.Models.Entities.Author
+@{
+    //ViewBag.Title = "Редактирование автора";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Редактирование автора</title>
+
+    @Styles.Render("~/Content/bootstrap.min.css")
+    @Styles.Render("~/Content/Site.css")
+    
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/Scripts/jquery-1.9.1.min.js")
+    @Scripts.Render("~/Scripts/bootstrap.js")
+</head>
+<body>
+    
+    <div class="container-fluid body-content">
+        @using (Html.BeginForm("SaveAuthor", "Book"))
+        {
+
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <p class="navbar-brand">Редактирование автора</p>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-save"></span>&nbsp;&nbsp;Сохранить
+                                </button>
+                            </li>
+                            <li>
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal">
+                                    <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;Добавить книгу
+                                </button>
+                            </li>
+                            <li></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            @Html.HiddenFor(a => a.Id)
+            <div class="form-horizontal">
+                
+                <div id="author">
+
+                    @Html.LabelFor(a => a.LastName, new { @class = "control-label col-xs-3" })
+                    <div class="col-sm-9 col-xs-9">@Html.EditorFor(a => a.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Введите фамилию автора" } })</div>
+
+                    @Html.LabelFor(a => a.FirstName, new { @class = "control-label col-xs-3 " })
+                    <div class="col-sm-9 col-xs-9">@Html.EditorFor(a => a.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "Введите имя автора" } })</div>
+
+                    @Html.LabelFor(a => a.Patronymic, new { @class = "control-label col-xs-3 " })
+                    <div class="col-sm-9 col-xs-9">@Html.EditorFor(a => a.Patronymic, new { htmlAttributes = new { @class = "form-control", placeholder = "Введите отчество автора" } })</div>
+
+                    <div class="clear"></div>
+
+                </div>
+                <div id="books">
+                    <div class="book">
+                        <div class="col-md-5 col-xs-6">Название</div>
+                        <div class="col-md-2 col-xs-3">Жанр</div>
+                        <div class="col-md-2 col-xs-3">Кол-во страниц</div>
+                        <div class="col-md-3"></div>
+                        <div class="clear"></div>
+                    </div>
+
+                    @for (int i = 0; i < Model.Books.Count; i++)
+                    {
+                        <div class="book">
+                            @Html.Hidden("Books[" + i + "].Id", Model.Books[i].Id)
+                            <div class="col-md-5 col-xs-6">
+                                @Html.Editor("Books[" + i + "].Name", new { htmlAttributes = new { @class = "form-control", @Value = Model.Books[i].Name } })
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                @Html.Editor("Books[" + i + "].Genre.Name", new { htmlAttributes = new { @class = "form-control", @Value = Model.Books[i].Genre.Name } })
+                            </div>
+                            <div class="col-md-2 col-xs-3">
+                                @Html.Editor("Books[" + i + "].Pages", new { htmlAttributes = new { @class = "form-control", @Value = Model.Books[i].Pages } })
+                            </div>
+
+                            <div class="col-md-3">
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    }
+                    @* Hidden *@
+                    <div class="book hide" id="rowSample">
+                        @* атрибут name проставляется js ниже *@
+                        <input type="hidden" class="js-id" value="0" />
+                        <div class="col-md-5 col-xs-6">
+                            <input class="form-control js-name" />
+                        </div>
+
+                        <div class="col-md-2 col-xs-3">
+                            <input class="form-control js-genre" />
+                        </div>
+
+                        <div class="col-md-2 col-xs-3">
+                            <input class="form-control js-pages" />
+                        </div>
+
+                        <div class="col-md-3">
+                        </div>
+                    </div>
+                    @* End Hidden *@
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        }
+
+        <div id="modal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="True">&times;</button>
+                        <h2 class="text-center">Добавление новой книги</h2>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="form-group">
+                            <label for="modal-name">Название: </label>
+                            <input id="modal-name" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-genre">Жанр: </label>
+                            <input id="modal-genre" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label for="modal-pages">Кол-во страниц </label>
+                            <input id="modal-pages" class="form-control" />
+                        </div>
+                        <button id="modal-add" class="btn btn-primary btn-block" type="button">Добавить</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default" type="button" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                var newId = @Model.Books.Count;
+                $("#modal-add").click(function () {
+                    var newRow = $("#rowSample").clone().attr("id", "").removeClass("hide");
+
+                    var name = $("#modal-name").val();
+                    var genre = $("#modal-genre").val();
+                    var pages = $("#modal-pages").val();
+
+                    $(newRow).find("js-id").first().attr("name", "Books[" + newId + "].Name");
+                    $(newRow).find(".js-name").first().attr("name", "Books[" + newId + "].Name").val(name);
+                    $(newRow).find(".js-genre").first().attr("name", "Books[" + newId + "].Genre.Name").val(genre);
+                    $(newRow).find(".js-pages").first().attr("name", "Books[" + newId + "].Pages").val(pages);
+                    newId++;
+                    $(newRow).insertBefore($("#books > .clear"));
+
+                    $("#modal-name").val("");
+                    $("#modal-genre").val("");
+                    $("#modal-pages").val("");
+                    $('#modal').modal('hide');
+                });
+            });
+        </script>
+
+    </div>
+</body>
+</html>
